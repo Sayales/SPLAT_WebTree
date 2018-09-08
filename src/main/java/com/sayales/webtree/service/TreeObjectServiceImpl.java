@@ -14,8 +14,8 @@ public class TreeObjectServiceImpl implements TreeObjectService {
     }
 
     @Override
-    public void save(TreeObject treeObject) {
-
+    public TreeObject save(TreeObject treeObject) {
+        return null;
     }
 
     @Override

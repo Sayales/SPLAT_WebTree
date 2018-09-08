@@ -4,7 +4,9 @@ import com.sayales.webtree.domain.TreeObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Pavel on 08.09.2018.
@@ -34,10 +36,20 @@ public class MockTreeObjectServiceImpl implements TreeObjectService {
     }
 
     @Override
-    public void save(TreeObject treeObject) {
-        treeObjects.remove(treeObject.getId() - 1);
-        treeObjects.add(treeObject.getId() - 1,treeObject);
+    public TreeObject save(TreeObject treeObject) {
+        boolean isPresent = false;
+        for (int i = 0; i < treeObjects.size(); i++) {
+            if (treeObjects.get(i).getId() == treeObject.getId()){
+                treeObjects.remove(i);
+                treeObjects.add(i,treeObject);
+                isPresent = true;
+            }
+        }
+        if (!isPresent) {
+            treeObjects.add(treeObject);
+        }
         System.out.println("Objects update: " + treeObjects);
+        return treeObject;
     }
 
     @Override
@@ -57,6 +69,7 @@ public class MockTreeObjectServiceImpl implements TreeObjectService {
 
     @Override
     public int delete(int id) {
-        return 0;
+        treeObjects.removeIf(elem -> (elem.getId() == id || elem.getIntParent() == id));
+        return id;
     }
 }

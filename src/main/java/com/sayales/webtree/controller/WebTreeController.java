@@ -18,6 +18,8 @@ import java.util.List;
 @Controller
 public class WebTreeController {
 
+    public static int ID =1000;
+
 
    @Autowired
     TreeObjectService service;
@@ -35,8 +37,26 @@ public class WebTreeController {
 
     @RequestMapping(value = "/moveCategory", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public CodeResponse getNewTree(@RequestBody TreeObject treeObject) throws IOException {
+    public CodeResponse moveCategory(@RequestBody TreeObject treeObject) throws IOException {
         service.save(treeObject);
         return new CodeResponse("success");
     }
+
+    @RequestMapping(value = "/deleteElement", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseBody
+    public CodeResponse deleteElement(@RequestBody List<String> treeObject) throws IOException {
+        for (String s : treeObject) {
+            service.delete(Integer.valueOf(s));
+        }
+        return new CodeResponse("success");
+    }
+
+    @RequestMapping(value = "/addElement", method = RequestMethod.POST, consumes =  "application/json")
+    @ResponseBody
+    public TreeObject addElement(@RequestBody TreeObject treeObject) throws IOException {
+        ID++;
+        treeObject.setId(ID);
+        return service.save(treeObject);
+    }
+
 }

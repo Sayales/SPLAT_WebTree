@@ -1,7 +1,11 @@
 package com.sayales.webtree.domain;
 
+import com.sayales.webtree.controller.WebTreeController;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sayales.webtree.controller.WebTreeController.ID;
 
 /**
  * Created by Pavel on 06.09.2018.
@@ -9,6 +13,7 @@ import java.util.List;
 
 
 public class TreeObject {
+
 
     private int id;
 
@@ -35,8 +40,19 @@ public class TreeObject {
         parent = "#";
     }
 
+    public TreeObject(String text, String parent) {
+        id = ID;
+        this.text = text;
+        this.parent = parent;
+    }
+
     public int getId() {
         return id;
+    }
+
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getText() {
@@ -49,6 +65,13 @@ public class TreeObject {
 
     public String getParent() { //cuz of json format for jstree
         return parent;
+    }
+
+    public int getIntParent() {
+        if (parent.equals("#"))
+            return -1;
+        else
+            return Integer.parseInt(parent);
     }
 
 

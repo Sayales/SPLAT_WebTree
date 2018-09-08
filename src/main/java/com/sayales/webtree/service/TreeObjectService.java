@@ -12,7 +12,7 @@ public interface TreeObjectService {
 
     String getValue();
 
-    void save(TreeObject treeObject);
+    TreeObject save(TreeObject treeObject);
 
     List<TreeObject> getAll();
 
