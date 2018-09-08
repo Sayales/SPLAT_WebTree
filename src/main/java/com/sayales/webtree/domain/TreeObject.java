@@ -14,7 +14,16 @@ public class TreeObject {
 
     private String text;
 
-    private int parent;
+    private String parent;
+
+    public TreeObject() {
+    }
+
+    public TreeObject(int id, String text, String parent) {
+        this.id = id;
+        this.text = text;
+        this.parent = parent;
+    }
 
     public TreeObject(int id) {
         this.id = id;
@@ -23,7 +32,7 @@ public class TreeObject {
     public TreeObject(int id, String value) {
         this.id = id;
         this.text = value;
-        parent = -1;
+        parent = "#";
     }
 
     public int getId() {
@@ -39,14 +48,11 @@ public class TreeObject {
     }
 
     public String getParent() { //cuz of json format for jstree
-        return (parent == -1) ? "#" : String.valueOf(parent);
-    }
-
-    public int getIntParent() {
         return parent;
     }
 
-    public void setParent(int parentID) {
+
+    public void setParent(String parentID) {
         this.parent = parentID;
     }
 

@@ -46,10 +46,35 @@
                 data: jsonData,
                 check_callback : true
             },
-            plugins : ['dnd']
+            plugins : ['dnd','changed']
         })
     }
 
+    $('#js_tree').bind('move_node.jstree', function (e, data) {
+        var params = {
+            id : data.node.id,
+            parent : data.node.parent,
+            text : data.node.text
+        };
+        moveCategory(params);
+        console.log("move_node", params);
+    });
+    function moveCategory(treeObject) {
+        $.ajax({
+            url : '/moveCategory',
+            data : JSON.stringify(treeObject),
+            dataType : 'json',
+            type : 'POST',
+            contentType: 'application/json',
+            success: function (resp) {
+                console.log('Category moved: ' + resp.code)
+            },
+            error : function (e) {
+                console.log('Error ' + e)
+                
+            }
+        })
+    }
 
 
 </script>
