@@ -18,7 +18,7 @@ public class MockTreeObjectServiceImpl implements TreeObjectService {
 
     List<TreeObject> treeObjects = new ArrayList<TreeObject>();
     {
-        TreeObject obj1 = new TreeObject(1, "Odin");
+       /* TreeObject obj1 = new TreeObject(1, "Odin");
         treeObjects.add(obj1);
         TreeObject obj2 = new TreeObject(2, "Dva");
         treeObjects.add(obj2);
@@ -27,7 +27,7 @@ public class MockTreeObjectServiceImpl implements TreeObjectService {
         //obj1.getChildren().add(obj2);
         obj2.setParent("1");
         //obj2.getChildren().add(obj3);
-        obj3.setParent("2");
+        obj3.setParent("2");*/
     }
 
 
@@ -52,6 +52,11 @@ public class MockTreeObjectServiceImpl implements TreeObjectService {
     @Override
     public List<TreeObject> getAll() {
         return treeObjects;
+    }
+
+    @Override
+    public List<TreeObject> getAllByParentId(Integer parentId) {
+        return null;
     }
 
 

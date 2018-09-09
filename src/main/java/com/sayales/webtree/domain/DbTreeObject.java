@@ -24,6 +24,9 @@ public class DbTreeObject {
     @Column(name = "text_value")
     private String text;
 
+    @Column(name = "children")
+    private boolean children;
+
     public DbTreeObject() {
     }
 
@@ -49,5 +52,13 @@ public class DbTreeObject {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isChildren() {
+        return children;
+    }
+
+    public void setChildren(boolean children) {
+        this.children = children;
     }
 }

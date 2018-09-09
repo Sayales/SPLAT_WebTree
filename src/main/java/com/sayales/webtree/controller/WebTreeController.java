@@ -25,10 +25,17 @@ public class WebTreeController {
         return new ModelAndView("index");
     }
 
-    @RequestMapping(value = "/getJSONTree", method = RequestMethod.GET)
+    @RequestMapping(value = "/getJSONTree", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public List<TreeObject> testJSON(){
-       return service.getAll();
+    public List<TreeObject> testJSON(@RequestBody String parent) throws InterruptedException {
+        Integer parentId;
+        if (parent.equals("#"))
+            parentId = null;
+        else {
+            Thread.sleep(2000);
+            parentId = Integer.parseInt(parent);
+        }
+        return service.getAllByParentId(parentId);
     }
 
     @RequestMapping(value = "/updateElement", method = RequestMethod.POST, consumes = "application/json")

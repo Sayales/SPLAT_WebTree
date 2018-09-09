@@ -25,7 +25,7 @@
     </body>
 <script>
     $(function () {
-       _getJsTree()
+       populateJsTree();
     });
     $('#js_tree').bind('move_node.jstree', function (e, data) {
         var params = {
@@ -88,30 +88,45 @@
     function populateJsTree(jsonData) {
         $('#js_tree').jstree({
             core : {
-                data: jsonData,
+                data: {
+                    type: 'post',
+                    url: '/getJSONTree',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data : function (node) {
+                        return JSON.stringify(node.id);
+                    }
+                },
                 check_callback : true
             },
             plugins : ['dnd','changed']
         })
     }
 
-    function _getJsTree() {
+    function _getJsTree(parent) {
         $.ajax({
             async: false,
-            type: 'get',
+            type: 'post',
             url: '/getJSONTree',
             dataType: 'json',
-
+            contentType: 'application/json',
+            data : JSON.stringify(parent),
             success: function (json) {
-                populateJsTree(json)
+                $.each(json, function (index, value) {
+                    var tree = $('#js_tree');
+                    var parent = tree.jstree(true).get_node(value.parent);
+                    tree.jstree('create_node', parent, value, 'last');
+                });
+                $('#js_tree').jstree(true).redraw();
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert(xhr.status);
                 alert(thrownError);
             }
         });
-
     }
+
+
 
     function _deleteElement(treeObject) {
         $.ajax({

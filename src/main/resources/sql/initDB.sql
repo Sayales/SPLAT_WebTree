@@ -7,5 +7,6 @@ CREATE SEQUENCE global_seq START 100;
 CREATE TABLE db_tree_objects (
   id INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
   parent_id INTEGER,
-  text_value VARCHAR(255)
+  text_value VARCHAR(255),
+  children boolean
 );

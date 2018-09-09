@@ -20,29 +20,19 @@ public class TreeObject {
 
     private String parent;
 
+    private boolean children;
+
     public TreeObject() {
     }
 
-    public TreeObject(int id, String text, String parent) {
+    public TreeObject(int id, String text, String parent, boolean children) {
         this.id = id;
         this.text = text;
         this.parent = parent;
+        this.children = children;
     }
 
-    public TreeObject(int id) {
-        this.id = id;
-    }
 
-    public TreeObject(int id, String value) {
-        this.id = id;
-        this.text = value;
-        parent = "#";
-    }
-
-    public TreeObject(String text, String parent) {
-        this.text = text;
-        this.parent = parent;
-    }
 
     public int getId() {
         return id;
@@ -77,9 +67,14 @@ public class TreeObject {
         this.parent = parentID;
     }
 
-   
 
+    public boolean isChildren() {
+        return children;
+    }
 
+    public void setChildren(boolean children) {
+        this.children = children;
+    }
 }
 
 

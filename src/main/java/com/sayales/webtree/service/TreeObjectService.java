@@ -16,6 +16,8 @@ public interface TreeObjectService {
 
     List<TreeObject> getAll();
 
+    List<TreeObject> getAllByParentId(Integer parentId);
+
 
     int delete(int id);
 
