@@ -25,7 +25,7 @@
     </body>
 <script>
     $(function () {
-       getJsTree()
+       _getJsTree()
     });
     $('#js_tree').bind('move_node.jstree', function (e, data) {
         var params = {
@@ -33,19 +33,16 @@
             parent : data.node.parent,
             text : data.node.text
         };
-        moveCategory(params);
+        _moveCategory(params);
         console.log("move_node", params);
     }).on('select_node.jstree', function (e, data) {
         console.log("Selected " + data.node.text);
         $('#update_area').val(data.node.text);
         $('#selected_id').val(data.node.id);
+    }).on('deselect_node.jstree', function (e, data) {
+        $('#selected_id').val('#');
     });
 
-    function loading(miliseconds) {
-            var currentTime = new Date().getTime();
-            while (currentTime + miliseconds >= new Date().getTime()) {
-            }
-    }
     
     function addButton() {
         var parentId = $('#selected_id').val();
@@ -57,7 +54,7 @@
             text : newData,
             parent : parentId
         };
-        addElement(newNode);
+        _addElement(newNode);
         $('#js_tree').jstree(true).redraw();
     }
 
@@ -71,46 +68,22 @@
             var params = {
                 id: node.id,
                 parent: node.parent,
-                text: node.text
+                text: text
             };
-            moveCategory(params);
+            _moveCategory(params);
             $('#js_tree').jstree('rename_node', node, text);
         }
     }
 
     function deleteButton() {
-        var node_id = $('#js_tree').jstree('get_selected');
-        deleteElement(node_id);
-        $('#js_tree').jstree(true).delete_node(node_id);
+        var tree = $('#js_tree');
+        console.log(tree.size());
+        var node_id = tree.jstree('get_selected');
+        $('#selected_id').val('#');
+        _deleteElement(node_id);
+        tree.jstree(true).delete_node(node_id);
         console.log(node_id);
     }
-    function getJsTree() {
-        $.ajax({
-         async: false,
-         type: 'get',
-         url: '/getJSONTree',
-         dataType: 'json',
-
-         success: function (json) {
-             populateJsTree(json)
-         },
-         error: function (xhr, ajaxOptions, thrownError) {
-         alert(xhr.status);
-         alert(thrownError);
-         }
-         });
-
-        }
-
-    $('#js_tree').bind('move_node.jstree', function (e, data) {
-        var params = {
-            id : data.node.id,
-            parent : data.node.parent,
-            text : data.node.text
-        };
-        moveCategory(params);
-        console.log("move_node", params);
-    });
 
     function populateJsTree(jsonData) {
         $('#js_tree').jstree({
@@ -122,7 +95,25 @@
         })
     }
 
-    function deleteElement(treeObject) {
+    function _getJsTree() {
+        $.ajax({
+            async: false,
+            type: 'get',
+            url: '/getJSONTree',
+            dataType: 'json',
+
+            success: function (json) {
+                populateJsTree(json)
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
+            }
+        });
+
+    }
+
+    function _deleteElement(treeObject) {
         $.ajax({
             url : '/deleteElement',
             data : JSON.stringify(treeObject),
@@ -139,15 +130,15 @@
         })
     }
 
-    function moveCategory(treeObject) {
+    function _moveCategory(treeObject) {
         $.ajax({
-            url : '/moveCategory',
+            url : '/updateElement',
             data : JSON.stringify(treeObject),
             dataType : 'json',
             type : 'POST',
             contentType: 'application/json',
             success: function (resp) {
-                console.log('Category moved: ' + resp.code)
+                console.log('Category moved: ' + resp.id)
             },
             error : function (e) {
                 console.log('Error ' + e)
@@ -156,9 +147,9 @@
         })
     }
 
-    function addElement(newElement) {
+    function _addElement(newElement) {
         $.ajax({
-            url : '/addElement',
+            url : '/updateElement',
             data : JSON.stringify(newElement),
             dataType : 'json',
             type : 'POST',

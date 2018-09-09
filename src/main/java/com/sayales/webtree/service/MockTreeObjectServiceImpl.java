@@ -12,7 +12,7 @@ import java.util.Set;
  * Created by Pavel on 08.09.2018.
  */
 
-@Service
+
 public class MockTreeObjectServiceImpl implements TreeObjectService {
 
 
@@ -30,10 +30,7 @@ public class MockTreeObjectServiceImpl implements TreeObjectService {
         obj3.setParent("2");
     }
 
-    @Override
-    public String getValue() {
-        return null;
-    }
+
 
     @Override
     public TreeObject save(TreeObject treeObject) {
@@ -57,15 +54,6 @@ public class MockTreeObjectServiceImpl implements TreeObjectService {
         return treeObjects;
     }
 
-    @Override
-    public TreeObject get(int id) {
-        return null;
-    }
-
-    @Override
-    public TreeObject getParent(int id) {
-        return null;
-    }
 
     @Override
     public int delete(int id) {

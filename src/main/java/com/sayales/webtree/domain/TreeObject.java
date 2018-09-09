@@ -5,7 +5,6 @@ import com.sayales.webtree.controller.WebTreeController;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sayales.webtree.controller.WebTreeController.ID;
 
 /**
  * Created by Pavel on 06.09.2018.
@@ -41,7 +40,6 @@ public class TreeObject {
     }
 
     public TreeObject(String text, String parent) {
-        id = ID;
         this.text = text;
         this.parent = parent;
     }
@@ -67,9 +65,9 @@ public class TreeObject {
         return parent;
     }
 
-    public int getIntParent() {
+    public Integer getIntParent() {
         if (parent.equals("#"))
-            return -1;
+            return null;
         else
             return Integer.parseInt(parent);
     }

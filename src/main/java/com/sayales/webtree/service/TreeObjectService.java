@@ -10,16 +10,12 @@ import java.util.List;
  */
 public interface TreeObjectService {
 
-    String getValue();
+
 
     TreeObject save(TreeObject treeObject);
 
     List<TreeObject> getAll();
 
-    TreeObject get(int id);
-
-    @Nullable
-    TreeObject getParent(int id);
 
     int delete(int id);
 

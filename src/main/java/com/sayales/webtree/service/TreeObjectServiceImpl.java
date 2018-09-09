@@ -1,40 +1,62 @@
 package com.sayales.webtree.service;
 
+import com.sayales.webtree.domain.DbTreeObject;
 import com.sayales.webtree.domain.TreeObject;
+import com.sayales.webtree.repository.DbTreeObjectJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Pavel on 06.09.2018.
  */
+
+@Service
 public class TreeObjectServiceImpl implements TreeObjectService {
-    @Override
-    public String getValue() {
-        return null;
-    }
+
+    @Autowired
+    private DbTreeObjectJpaRepository repository;
 
     @Override
     public TreeObject save(TreeObject treeObject) {
-        return null;
+        DbTreeObject dbTreeObject =  repository.findOne(treeObject.getId());
+        if (dbTreeObject != null) {
+            dbTreeObject.setText(treeObject.getText());
+            dbTreeObject.setParentId(treeObject.getIntParent());
+            repository.save(dbTreeObject);
+        }
+        else {
+            dbTreeObject = new DbTreeObject();
+            dbTreeObject.setParentId(treeObject.getIntParent());
+            dbTreeObject.setText(treeObject.getText());
+            dbTreeObject = repository.save(dbTreeObject);
+            treeObject.setId(dbTreeObject.getId());
+        }
+        return treeObject;
     }
 
     @Override
     public List<TreeObject> getAll() {
-        return null;
+        List<DbTreeObject> dbAll = repository.findAll();
+        List<TreeObject> result = new ArrayList<>();
+        for (DbTreeObject dbObj : dbAll) {
+            if (dbObj.getParentId() == null)
+                result.add(new TreeObject(dbObj.getId(), dbObj.getText(), "#"));
+            else
+                result.add(new TreeObject(dbObj.getId(), dbObj.getText(), dbObj.getParentId().toString()));
+        }
+        return result;
     }
 
-    @Override
-    public TreeObject get(int id) {
-        return null;
-    }
 
-    @Override
-    public TreeObject getParent(int id) {
-        return null;
-    }
 
     @Override
     public int delete(int id) {
-        return 0;
+        repository.deleteByParentId(id);
+        repository.delete(id);
+        return id;
     }
 }

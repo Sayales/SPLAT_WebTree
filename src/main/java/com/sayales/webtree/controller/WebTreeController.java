@@ -1,6 +1,5 @@
 package com.sayales.webtree.controller;
 
-import com.sayales.webtree.domain.CodeResponse;
 import com.sayales.webtree.domain.TreeObject;
 import com.sayales.webtree.service.TreeObjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ import java.util.List;
 @Controller
 public class WebTreeController {
 
-    public static int ID =1000;
-
-
    @Autowired
     TreeObjectService service;
 
@@ -35,28 +31,26 @@ public class WebTreeController {
        return service.getAll();
     }
 
-    @RequestMapping(value = "/moveCategory", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/updateElement", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public CodeResponse moveCategory(@RequestBody TreeObject treeObject) throws IOException {
-        service.save(treeObject);
-        return new CodeResponse("success");
+    public TreeObject updateElement(@RequestBody TreeObject treeObject) throws IOException {
+        return service.save(treeObject);
     }
 
     @RequestMapping(value = "/deleteElement", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public CodeResponse deleteElement(@RequestBody List<String> treeObject) throws IOException {
+    public String deleteElement(@RequestBody List<String> treeObject) throws IOException {
+        String response = "";
         for (String s : treeObject) {
-            service.delete(Integer.valueOf(s));
+            response = ";" + service.delete(Integer.valueOf(s));
         }
-        return new CodeResponse("success");
+        return response;
     }
 
-    @RequestMapping(value = "/addElement", method = RequestMethod.POST, consumes =  "application/json")
+  /*  @RequestMapping(value = "/addElement", method = RequestMethod.POST, consumes =  "application/json")
     @ResponseBody
     public TreeObject addElement(@RequestBody TreeObject treeObject) throws IOException {
-        ID++;
-        treeObject.setId(ID);
         return service.save(treeObject);
     }
-
+*/
 }
