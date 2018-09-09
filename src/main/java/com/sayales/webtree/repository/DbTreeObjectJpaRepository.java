@@ -21,4 +21,6 @@ public interface DbTreeObjectJpaRepository extends JpaRepository<DbTreeObject, I
 
     List<DbTreeObject> findAllByParentId(@Nullable  Integer ParentId);
 
+    DbTreeObject findOne(@Nullable Integer id);
+
 }

@@ -37,9 +37,11 @@ public class TreeObjectServiceImpl implements TreeObjectService {
             dbTreeObject = repository.save(dbTreeObject);
             treeObject.setId(dbTreeObject.getId());
         }
-        DbTreeObject dbTreeParentObject = repository.findOne(treeObject.getIntParent());
-        dbTreeParentObject.setChildren(checkChildren(dbTreeParentObject));
-        repository.save(dbTreeParentObject);
+        if (treeObject.getIntParent() != null) {
+            DbTreeObject dbTreeParentObject = repository.findOne(treeObject.getIntParent());
+            dbTreeParentObject.setChildren(checkChildren(dbTreeParentObject));
+            repository.save(dbTreeParentObject);
+        }
         return treeObject;
     }
 
@@ -56,11 +58,17 @@ public class TreeObjectServiceImpl implements TreeObjectService {
 
     @Override
     public int delete(int id) {
-        DbTreeObject dbTreeParentObject = repository.findOne(repository.findOne(id).getParentId());
-        repository.deleteByParentId(id);
-        repository.delete(id);
-        dbTreeParentObject.setChildren(checkChildren(dbTreeParentObject));
-        repository.save(dbTreeParentObject);
+        if (repository.findOne(id).getParentId() != null) {
+            DbTreeObject dbTreeParentObject = repository.findOne(repository.findOne(id).getParentId());
+           // repository.delete(id);
+            deepDelete(id);
+            dbTreeParentObject.setChildren(checkChildren(dbTreeParentObject));
+            repository.save(dbTreeParentObject);
+        }
+        else {
+           // repository.delete(id);
+            deepDelete(id);
+        }
         return id;
     }
 
@@ -73,6 +81,20 @@ public class TreeObjectServiceImpl implements TreeObjectService {
                 result.add(new TreeObject(dbObj.getId(), dbObj.getText(), dbObj.getParentId().toString(), dbObj.isChildren()));
         }
         return result;
+    }
+
+    private int deepDelete(int id) {
+        List<DbTreeObject> children = repository.findAllByParentId(id);
+        repository.delete(id);
+        for (DbTreeObject child : children) {
+            if (child.isChildren()) {
+                deepDelete(child.getId());
+                repository.delete(child.getId());
+            }
+            else
+                repository.delete(child.getId());
+        }
+        return id;
     }
 
     private boolean checkChildren(DbTreeObject object) {
