@@ -1,12 +1,11 @@
 package com.sayales.webtree.repository;
 
 import com.sayales.webtree.domain.DbTreeObject;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 /**
@@ -19,7 +18,7 @@ public interface DbTreeObjectJpaRepository extends JpaRepository<DbTreeObject, I
 
     void deleteByParentId(int parentId);
 
-    List<DbTreeObject> findAllByParentId(@Nullable  Integer ParentId);
+    List<DbTreeObject> findAllByParentId(@Nullable Integer ParentId);
 
     DbTreeObject findOne(@Nullable Integer id);
 
