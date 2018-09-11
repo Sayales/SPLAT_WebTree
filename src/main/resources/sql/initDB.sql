@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS cities;
-DROP TABLE IF EXISTS products;
+
 DROP TABLE IF EXISTS db_tree_objects;
 DROP TABLE IF EXISTS db_tree_object;
 DROP SEQUENCE IF EXISTS global_seq CASCADE;

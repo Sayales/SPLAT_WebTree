@@ -15,6 +15,7 @@ import java.util.List;
  */
 
 @Controller
+@RequestMapping(value = "/")
 public class WebTreeController {
 
    @Autowired
@@ -22,6 +23,13 @@ public class WebTreeController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView index(){
+        return new ModelAndView("index");
+    }
+
+
+
+    @RequestMapping(value = "/favicon.ico", method = RequestMethod.GET)
+    public ModelAndView indexFav(){
         return new ModelAndView("index");
     }
 
