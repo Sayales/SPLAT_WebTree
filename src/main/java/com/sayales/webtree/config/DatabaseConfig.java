@@ -61,8 +61,6 @@ public class DatabaseConfig {
         ds.setMinEvictableIdleTimeMillis(Long.valueOf(env.getRequiredProperty("db.minEvictableIdleTimeMillis")));
         ds.setTestOnBorrow(Boolean.valueOf(env.getRequiredProperty("db.testOnBorrow")));
         ds.setValidationQuery(env.getRequiredProperty("db.validationQuery"));
-        ds.setConnectionProperties("ssl=true");
-        ds.setConnectionProperties("sslfactory=org.postgresql.ssl.NonValidatingFactory");
         return ds;
     }
 

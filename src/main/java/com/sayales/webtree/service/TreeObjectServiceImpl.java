@@ -26,16 +26,18 @@ public class TreeObjectServiceImpl implements TreeObjectService {
         if (dbTreeObject != null) {
             dbTreeObject.setText(treeObject.getText());
             dbTreeObject.setParentId(treeObject.getIntParent());
-            dbTreeObject.setChildren(checkChildren(repository.findOne(dbTreeObject.getId())));
+            dbTreeObject.setChildren(checkChildren(dbTreeObject));
             repository.save(dbTreeObject);
+            treeObject.setChildren(dbTreeObject.isChildren());
         }
         else {
             dbTreeObject = new DbTreeObject();
             dbTreeObject.setParentId(treeObject.getIntParent());
             dbTreeObject.setText(treeObject.getText());
-            dbTreeObject.setChildren(checkChildren(repository.findOne(dbTreeObject.getId())));
+            dbTreeObject.setChildren(checkChildren(dbTreeObject));
             dbTreeObject = repository.save(dbTreeObject);
             treeObject.setId(dbTreeObject.getId());
+            treeObject.setChildren(dbTreeObject.isChildren());
         }
         if (treeObject.getIntParent() != null) {
             DbTreeObject dbTreeParentObject = repository.findOne(treeObject.getIntParent());
@@ -98,6 +100,7 @@ public class TreeObjectServiceImpl implements TreeObjectService {
     }
 
     private boolean checkChildren(DbTreeObject object) {
+        List<DbTreeObject> childrens = repository.findAllByParentId(object.getId());
         return repository.findAllByParentId(object.getId()).size() != 0;
     }
 }
