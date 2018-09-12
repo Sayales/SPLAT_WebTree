@@ -26,14 +26,14 @@ public class TreeObjectServiceImpl implements TreeObjectService {
         if (dbTreeObject != null) {
             dbTreeObject.setText(treeObject.getText());
             dbTreeObject.setParentId(treeObject.getIntParent());
-            dbTreeObject.setChildren(treeObject.isChildren());
+            dbTreeObject.setChildren(checkChildren(repository.findOne(dbTreeObject.getId())));
             repository.save(dbTreeObject);
         }
         else {
             dbTreeObject = new DbTreeObject();
             dbTreeObject.setParentId(treeObject.getIntParent());
             dbTreeObject.setText(treeObject.getText());
-            dbTreeObject.setChildren(treeObject.isChildren());
+            dbTreeObject.setChildren(checkChildren(repository.findOne(dbTreeObject.getId())));
             dbTreeObject = repository.save(dbTreeObject);
             treeObject.setId(dbTreeObject.getId());
         }
