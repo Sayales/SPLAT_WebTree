@@ -18,8 +18,11 @@ import java.util.List;
 @RequestMapping(value = "/")
 public class WebTreeController {
 
-   @Autowired
-    TreeObjectService service;
+
+    @Autowired
+    private TreeObjectService service;
+
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView index(){

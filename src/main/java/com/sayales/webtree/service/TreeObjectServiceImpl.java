@@ -3,12 +3,14 @@ package com.sayales.webtree.service;
 import com.sayales.webtree.domain.DbTreeObject;
 import com.sayales.webtree.domain.TreeObject;
 import com.sayales.webtree.repository.DbTreeObjectJpaRepository;
+import com.sayales.webtree.transformers.TreeObjectTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Pavel on 06.09.2018.
@@ -19,6 +21,9 @@ public class TreeObjectServiceImpl implements TreeObjectService {
 
     @Autowired
     private DbTreeObjectJpaRepository repository;
+
+    @Autowired
+    private TreeObjectTransformer transformer;
 
     @Override
     public TreeObject save(TreeObject treeObject) {
@@ -34,12 +39,13 @@ public class TreeObjectServiceImpl implements TreeObjectService {
             dbTreeObject = new DbTreeObject();
             dbTreeObject.setParentId(treeObject.getIntParent());
             dbTreeObject.setText(treeObject.getText());
-            dbTreeObject.setChildren(checkChildren(dbTreeObject));
             dbTreeObject = repository.save(dbTreeObject);
+            dbTreeObject.setChildren(checkChildren(dbTreeObject));
+            repository.save(dbTreeObject);
             treeObject.setId(dbTreeObject.getId());
             treeObject.setChildren(dbTreeObject.isChildren());
         }
-        if (treeObject.getIntParent() != null) {
+        if (dbTreeObject.getParentId() != null) {
             DbTreeObject dbTreeParentObject = repository.findOne(treeObject.getIntParent());
             dbTreeParentObject.setChildren(checkChildren(dbTreeParentObject));
             repository.save(dbTreeParentObject);
@@ -62,27 +68,19 @@ public class TreeObjectServiceImpl implements TreeObjectService {
     public int delete(int id) {
         if (repository.findOne(id).getParentId() != null) {
             DbTreeObject dbTreeParentObject = repository.findOne(repository.findOne(id).getParentId());
-           // repository.delete(id);
             deepDelete(id);
             dbTreeParentObject.setChildren(checkChildren(dbTreeParentObject));
             repository.save(dbTreeParentObject);
         }
         else {
-           // repository.delete(id);
             deepDelete(id);
         }
         return id;
     }
 
     private List<TreeObject> convertTreeObjects(List<DbTreeObject> dbTreeObjects) {
-        List<TreeObject> result = new ArrayList<>();
-        for (DbTreeObject dbObj : dbTreeObjects) {
-            if (dbObj.getParentId() == null)
-                result.add(new TreeObject(dbObj.getId(), dbObj.getText(), "#", dbObj.isChildren()));
-            else
-                result.add(new TreeObject(dbObj.getId(), dbObj.getText(), dbObj.getParentId().toString(), dbObj.isChildren()));
-        }
-        return result;
+        return dbTreeObjects.stream().
+                map(dbObj -> transformer.toTreeObject(dbObj)).collect(Collectors.toList());
     }
 
     private int deepDelete(int id) {
@@ -100,7 +98,7 @@ public class TreeObjectServiceImpl implements TreeObjectService {
     }
 
     private boolean checkChildren(DbTreeObject object) {
-        List<DbTreeObject> childrens = repository.findAllByParentId(object.getId());
+        List<DbTreeObject> children = repository.findAllByParentId(object.getId());
         return repository.findAllByParentId(object.getId()).size() != 0;
     }
 }
